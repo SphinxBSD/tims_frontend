@@ -54,13 +54,17 @@ export class VaultListComponent implements OnInit {
 
   openDepositDialog(vault: Vault): void {
     this.dialog.open(DepositDialogComponent, {
-      data: { vault }
+      data: { vault },
+      width: '400px',
+      panelClass: 'custom-dialog'
     });
   }
 
   openWithdrawDialog(vault: Vault): void {
     this.dialog.open(WithdrawDialogComponent, {
-      data: { vault }
+      data: { vault },
+      width: '400px',
+      panelClass: 'custom-dialog'
     });
   }
 
@@ -84,11 +88,10 @@ export class VaultListComponent implements OnInit {
 
   isVaultOwner(vault: Vault): boolean {
     const account = this.web3Service.getAccount();
-    console.log("Owner:");
-    console.log(vault.owner.toLocaleLowerCase());
-    console.log("Account:");
-    console.log(account.toLocaleLowerCase());
-    
     return vault.owner.toLowerCase() === account.toLowerCase();
+  }
+
+  parseFloat(value: string): number {
+    return parseFloat(value) || 0;
   }
 }

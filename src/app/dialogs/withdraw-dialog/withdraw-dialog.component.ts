@@ -62,7 +62,7 @@ export class WithdrawDialogComponent {
       return;
     }
 
-    const amount = this.withdrawForm.get('amount')?.value;
+    const amount = this.withdrawForm.get('amount')?.value.toString();
     const recipient = this.withdrawForm.get('recipient')?.value;
     
     if (parseFloat(amount) > parseFloat(this.maxAmount)) {

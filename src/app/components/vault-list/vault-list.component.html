@@ -1,76 +1,119 @@
-<div class="vault-list">
-  <div class="vault-list__header">
-    <h2>Mis Vaults</h2>
-    
+<div class="vault-container">
+  <div class="vault-header">
+    <!-- <div class="vault-header__title">
+      <h1>Mis Bóvedas</h1>
+      <p class="vault-header__subtitle">Administra tus activos de forma segura</p>
+    </div>
+     -->
     <button 
       mat-raised-button 
-      color="primary"
+      class="connect-button"
       *ngIf="!(isConnected$ | async)"
       (click)="connectWallet()"
     >
+      <mat-icon>account_balance_wallet</mat-icon>
       Conectar Wallet
     </button>
   </div>
 
-  <div class="vault-list__loading" *ngIf="(isLoading$ | async)">
-    <mat-spinner diameter="30"></mat-spinner>
-    <span>Cargando vaults...</span>
+  <div class="vault-actions" *ngIf="(isConnected$ | async)">
+    <button mat-flat-button color="accent" class="create-button" routerLink="/create">
+      <mat-icon>add_circle</mat-icon>
+      Crear nueva bóveda
+    </button>
   </div>
 
-  <div class="vault-list__error" *ngIf="(error$ | async) as error">
-    {{ error }}
+  <div class="vault-loading" *ngIf="(isLoading$ | async)">
+    <mat-spinner diameter="40"></mat-spinner>
+    <span>Cargando tus bóvedas...</span>
   </div>
 
-  <div class="vault-list__content">
-    <div class="vault-list__empty" *ngIf="(vaults$ | async)?.length === 0 && (isConnected$ | async)">
-      <p>No tienes vaults creados aún</p>
-      <button mat-flat-button color="accent" routerLink="/vault/create">
-        Crear nuevo vault
+  <div class="vault-error" *ngIf="(error$ | async) as error">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error }}</p>
+  </div>
+
+  <div class="vault-empty" *ngIf="(vaults$ | async)?.length === 0 && (isConnected$ | async) && !(isLoading$ | async)">
+    <div class="vault-empty__content">
+      <mat-icon>account_balance</mat-icon>
+      <h2>No tienes bóvedas creadas</h2>
+      <p>Crea tu primera bóveda para comenzar a administrar tus activos</p>
+      <button mat-flat-button color="accent" class="create-button" routerLink="/vault/create">
+        <mat-icon>add_circle</mat-icon>
+        Crear nueva bóveda
       </button>
     </div>
+  </div>
 
-    <div class="vault-list__grid">
-      <mat-card 
-        class="vault-card"
-        [class.vault-card--selected]="(currentVault$ | async)?.address === vault.address"
-        *ngFor="let vault of (vaults$ | async)"
-        (click)="selectVault(vault)"
-      >
-        <mat-card-header>
-          <mat-card-title>{{ vault.metadata.name }}</mat-card-title>
-          <mat-card-subtitle>
-            {{ getCategoryLabel(vault.metadata.category) }}
-          </mat-card-subtitle>
-        </mat-card-header>
-
-        <mat-card-content>
-          <div class="vault-card__balance">
-            <strong>Balance:</strong> {{ formatBalance(vault.balance) }} ETH
+  <ng-container *ngIf="vaults$ | async as vaults">
+    <div class="vault-grid" *ngIf="vaults.length > 0">
+      <div class="vault-card-wrapper" *ngFor="let vault of vaults">
+        <div class="vault-card" 
+            [ngClass]="{
+              'vault-card--selected': (currentVault$ | async)?.address === vault.address,
+              'vault-card--travel': vault.metadata.category === 'Travel',
+              'vault-card--party': vault.metadata.category === 'Party',
+              'vault-card--medical': vault.metadata.category === 'Medical',
+              'vault-card--emergency': vault.metadata.category === 'Emergency',
+              'vault-card--savings': vault.metadata.category === 'Savings',
+              'vault-card--home': vault.metadata.category === 'Home',
+              'vault-card--family': vault.metadata.category === 'Family',
+              'vault-card--education': vault.metadata.category === 'Education',
+              'vault-card--entertainment': vault.metadata.category === 'Entertainment',
+              'vault-card--sport': vault.metadata.category === 'Sport',
+              'vault-card--other': vault.metadata.category === 'Other'
+            }"
+            (click)="selectVault(vault)">
+          
+          <div class="vault-card__header">
+            <div class="vault-card__type-icon">
+              <mat-icon *ngIf="vault.type === 'SingleOwner'">person</mat-icon>
+              <mat-icon *ngIf="vault.type === 'MultiSig'">group</mat-icon>
+              <mat-icon *ngIf="vault.type === 'Timelock'">schedule</mat-icon>
+              <mat-icon *ngIf="vault.type === 'Funding'">attach_money</mat-icon>
+            </div>
+            <div class="vault-card__category">
+              <span class="category-badge">{{ getCategoryLabel(vault.metadata.category) }}</span>
+            </div>
           </div>
           
-          <div class="vault-card__type">
-            <mat-icon>
-              {{ vault.type === 'SingleOwner' ? 'person' : 
-                 vault.type === 'MultiSig' ? 'group' :
-                 vault.type === 'Timelock' ? 'schedule' : 'attach_money' }}
-            </mat-icon>
-            {{ vault.type }}
+          <div class="vault-card__body">
+            <h3 class="vault-card__title">{{ vault.metadata.name }}</h3>
+            
+            <div class="vault-card__balance">
+              <span class="balance-value">{{ formatBalance(vault.balance) }}</span>
+              <span class="balance-currency">ETH</span>
+            </div>
+            
+            <div class="vault-card__target" *ngIf="vault.metadata.target">
+              <div class="target-progress">
+                <div class="target-progress-bar" 
+                    [style.width]="(parseFloat(vault.balance)/parseFloat(vault.metadata.target)*100) + '%'">
+                </div>
+              </div>
+              <div class="target-text">
+                <span>Meta: {{ vault.metadata.target }} ETH</span>
+                <span>{{ (parseFloat(vault.balance)/parseFloat(vault.metadata.target)*100).toFixed(0) }}%</span>
+              </div>
+            </div>
           </div>
-
-          <div class="vault-card__target" *ngIf="vault.metadata.target">
-            <strong>Meta:</strong> {{ vault.metadata.target }} ETH
+          
+          <div class="vault-card__actions">
+            <button mat-button class="action-button deposit-button" (click)="$event.stopPropagation(); openDepositDialog(vault)">
+              <mat-icon>arrow_downward</mat-icon>
+              <span>Depositar</span>
+            </button>
+            <button mat-button class="action-button withdraw-button" [disabled]="isVaultOwner(vault)" (click)="$event.stopPropagation(); openWithdrawDialog(vault)">
+              <mat-icon>arrow_upward</mat-icon>
+              <span>Retirar</span>
+            </button>
+            <button mat-button class="action-button edit-button" (click)="$event.stopPropagation()">
+              <mat-icon>edit</mat-icon>
+              <span>Editar</span>
+            </button>
           </div>
-        </mat-card-content>
-
-        <mat-card-actions class="vault-card__actions">
-            <button mat-button (click)="openDepositDialog(vault)">Depositar</button>
-            <button mat-button [disabled]="!isVaultOwner(vault)" (click)="openWithdrawDialog(vault)">Retirar</button>
-
-          <button mat-button color="accent" (click)="$event.stopPropagation()">
-            Editar
-          </button>
-        </mat-card-actions>
-      </mat-card>
+        </div>
+      </div>
     </div>
-  </div>
+  </ng-container>
 </div>

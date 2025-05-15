@@ -1,76 +1,132 @@
 <!-- vault-create.component.html -->
 <div class="vault-create-container">
   <div class="card">
-    <h2>Create New Vault</h2>
+    <div class="card-header">
+      <h2>Create New Vault</h2>
+      <p class="subtitle">Secure your assets in a customized vault</p>
+    </div>
     
-    <div *ngIf="!isConnected" class="connect-wallet-prompt">
-      <p>Please connect your wallet to create a vault</p>
+    <div *ngIf="!isConnected" class="connect-wallet-section">
+      <div class="wallet-illustration">
+        <i class="material-icons">account_balance_wallet</i>
+      </div>
+      <h3>Connect Your Wallet</h3>
+      <p>Please connect your wallet to create and manage your vault</p>
       <button (click)="connectWallet()" class="connect-button">
+        <i class="material-icons">link</i>
         Connect Wallet
       </button>
     </div>
 
     <div *ngIf="isConnected" class="form-container">
+      <div class="connected-status" *ngIf="account">
+        <div class="status-indicator"></div>
+        <span class="connected-text">Connected: {{account | slice:0:6}}...{{account | slice:-4}}</span>
+      </div>
+
       <form [formGroup]="createForm" (ngSubmit)="onSubmit()" class="vault-form">
-        <div class="form-group">
-          <label>Name</label>
-          <input formControlName="name" type="text" placeholder="Vault name">
-          <div *ngIf="createForm.controls['name'].invalid && createForm.controls['name'].touched" class="error">
-            Name is required and must be at least 3 characters
+        <div class="form-row">
+          <div class="form-group">
+            <label>Vault Name</label>
+            <div class="input-container">
+              <i class="material-icons icon">label</i>
+              <input formControlName="name" type="text" placeholder="My Awesome Vault">
+            </div>
+            <div *ngIf="createForm.controls['name'].invalid && createForm.controls['name'].touched" class="error-message">
+              <i class="material-icons">error_outline</i>
+              Name is required (min. 3 characters)
+            </div>
           </div>
         </div>
 
-        <div class="form-group">
-          <label>Description</label>
-          <textarea formControlName="description" placeholder="Vault description"></textarea>
-          <div *ngIf="createForm.controls['description'].invalid && createForm.controls['description'].touched" class="error">
-            Description is required
+        <div class="form-row">
+          <div class="form-group">
+            <label>Description</label>
+            <div class="input-container textarea-container">
+              <i class="material-icons icon">description</i>
+              <textarea formControlName="description" placeholder="What's the purpose of this vault?"></textarea>
+            </div>
+            <div *ngIf="createForm.controls['description'].invalid && createForm.controls['description'].touched" class="error-message">
+              <i class="material-icons">error_outline</i>
+              Description is required
+            </div>
           </div>
         </div>
 
-        <div class="form-group">
-          <label>Category</label>
-          <select formControlName="category">
-            <option value="">Select category</option>
-            <option value="savings">Savings</option>
-            <option value="charity">Charity</option>
-            <option value="project">Project Funding</option>
-            <option value="personal">Personal</option>
-          </select>
-          <div *ngIf="createForm.controls['category'].invalid && createForm.controls['category'].touched" class="error">
-            Please select a category
+        <div class="form-row two-columns">
+          <div class="form-group">
+            <label>Category</label>
+            <div class="input-container select-container">
+              <i class="material-icons icon">category</i>
+              <select formControlName="category">
+                <option value="">Select category</option>
+                <option value="savings">Savings</option>
+                <option value="charity">Charity</option>
+                <option value="project">Project Funding</option>
+                <option value="personal">Personal</option>
+              </select>
+              <i class="material-icons dropdown-icon">expand_more</i>
+            </div>
+            <div *ngIf="createForm.controls['category'].invalid && createForm.controls['category'].touched" class="error-message">
+              <i class="material-icons">error_outline</i>
+              Please select a category
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Target Amount (ETH)</label>
+            <div class="input-container">
+              <i class="material-icons icon">monetization_on</i>
+              <input formControlName="target" type="number" step="any" min="0.0001" placeholder="0.5">
+            </div>
+            <div *ngIf="createForm.controls['target'].invalid && createForm.controls['target'].touched" class="error-message">
+              <i class="material-icons">error_outline</i>
+              Minimum: 0.0001 ETH
+            </div>
           </div>
         </div>
 
-        <div class="form-group">
-          <label>Image URI</label>
-          <input formControlName="imageURI" type="text" placeholder="https://example.com/image.png ">
-          <div *ngIf="createForm.controls['imageURI'].invalid && createForm.controls['imageURI'].touched" class="error">
-            Image URI is required
+        <div class="form-row">
+          <div class="form-group">
+            <label>Image URI</label>
+            <div class="input-container">
+              <i class="material-icons icon">image</i>
+              <input formControlName="imageURI" type="text" placeholder="https://example.com/image.png">
+            </div>
+            <div *ngIf="createForm.controls['imageURI'].invalid && createForm.controls['imageURI'].touched" class="error-message">
+              <i class="material-icons">error_outline</i>
+              Image URI is required
+            </div>
           </div>
         </div>
 
-        <div class="form-group">
-          <label>
-            <input type="checkbox" formControlName="isPublic">
-            Public Vault
-          </label>
-        </div>
-
-        <div class="form-group">
-          <label>Target Amount (ETH)</label>
-          <input formControlName="target" type="number" step="any" min="0.0001" placeholder="0.5">
-          <div *ngIf="createForm.controls['target'].invalid && createForm.controls['target'].touched" class="error">
-            Target amount must be at least 0.0001 ETH
+        <div class="form-row">
+          <div class="form-group checkbox-group">
+            <div class="toggle-switch">
+              <input type="checkbox" id="isPublic" formControlName="isPublic">
+              <label for="isPublic"></label>
+              <span class="toggle-label">Public Vault</span>
+              <span class="toggle-hint">{{createForm.value.isPublic ? 'Anyone can see your vault' : 'Only you can see your vault'}}</span>
+            </div>
           </div>
         </div>
 
-        <div *ngIf="error" class="error-message">{{error}}</div>
-        <div *ngIf="successMessage" class="success-message">{{successMessage}}</div>
+        <div *ngIf="error" class="notification error-notification">
+          <i class="material-icons">error</i>
+          <span>{{error}}</span>
+        </div>
+        
+        <div *ngIf="successMessage" class="notification success-notification">
+          <i class="material-icons">check_circle</i>
+          <span>{{successMessage}}</span>
+        </div>
 
-        <button type="submit" [disabled]="createForm.invalid || isLoading" class="submit-button">
-          {{isLoading ? 'Creating...' : 'Create Vault'}}
-        </button>
+        <div class="form-actions">
+          <button type="submit" [disabled]="createForm.invalid || isLoading" class="submit-button">
+            <i class="material-icons">{{isLoading ? 'hourglass_empty' : 'add_circle'}}</i>
+            {{isLoading ? 'Creating...' : 'Create Vault'}}
+          </button>
+        </div>
       </form>
     </div>
   </div>

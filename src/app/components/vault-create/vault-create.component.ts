@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { VaultService } from '../../services/vault.service';
 import { Web3Service } from '../../services/web3.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { VaultType, VaultMetadata, CreateVaultRequest  } from '../../models/vault.model';
+import { VaultType, VaultMetadata, CreateVaultRequest } from '../../models/vault.model';
 
 @Component({
   selector: 'app-vault-create',
@@ -62,36 +62,36 @@ export class VaultCreateComponent {
       });
   }
 
-onSubmit() {
-  if (this.createForm.invalid || this.isLoading) return;
+  onSubmit() {
+    if (this.createForm.invalid || this.isLoading) return;
 
-  const formValue = this.createForm.value;
-  
-  // Añadimos el tipo de vault (SingleOwner en este caso)
-  const request: CreateVaultRequest = {
-    metadata: {
-      name: formValue.name,
-      description: formValue.description,
-      category: formValue.category,
-      imageURI: formValue.imageURI,
-      isPublic: formValue.isPublic,
-      target: formValue.target.toString()
-    },
-    type: VaultType.SingleOwner // Añadimos el tipo requerido
-  };
+    const formValue = this.createForm.value;
+    
+    // Añadimos el tipo de vault (SingleOwner en este caso)
+    const request: CreateVaultRequest = {
+      metadata: {
+        name: formValue.name,
+        description: formValue.description,
+        category: formValue.category,
+        imageURI: formValue.imageURI,
+        isPublic: formValue.isPublic,
+        target: formValue.target.toString()
+      },
+      type: VaultType.SingleOwner // Añadimos el tipo requerido
+    };
 
-  this.vaultService.createSingleOwnerVault(request)
-    .pipe(takeUntilDestroyed())
-    .subscribe(vaultAddress => {
-      if (vaultAddress) {
-        this.successMessage = 'Vault created successfully!';
-        this.vaultCreated = true;
-        setTimeout(() => {
-          this.router.navigate(['/vault', vaultAddress]);
-        }, 2000);
-      }
-    });
-}
+    this.vaultService.createSingleOwnerVault(request)
+      .pipe(takeUntilDestroyed())
+      .subscribe(vaultAddress => {
+        if (vaultAddress) {
+          this.successMessage = 'Vault created successfully!';
+          this.vaultCreated = true;
+          setTimeout(() => {
+            this.router.navigate(['/vault', vaultAddress]);
+          }, 2000);
+        }
+      });
+  }
 
   get isConnected() {
     return this.web3Service.isConnected();
