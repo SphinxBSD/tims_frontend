@@ -22,11 +22,14 @@ export class Web3Service {
   
   // Configuración de contratos según red
   private contractConfig: Record<string, { factoryAddress: string }> = {
+    // Base Mainnet (8453)
+    '8453': {
+      factoryAddress: '0x342108023CC0aA1bC4cB6d99a68c1712711313d2' // Reemplazar con la dirección real en Base
+    },
     // Sepolia (11155111)
     '11155111': {
       factoryAddress: '0xf1Da8fA04bE703cC52bc8Ac269a439111FeaD838' // Reemplazar con la dirección real en Sepolia
     },
-    // Puedes agregar más redes aquí según sea necesario
     // Hardhat local (31337)
     '31337': {
       factoryAddress: '0x5FbDB2315678afecb367f032d93F642f64180aa3'
@@ -34,9 +37,10 @@ export class Web3Service {
   };
 
   // La red objetivo para la aplicación
-  private readonly targetNetworkId = 11155111; // Sepolia
+  private readonly targetNetworkId = 8453; // Base Mainnet
   private readonly networkNames: Record<number, string> = {
     1: 'Ethereum Mainnet',
+    8453: 'Base Mainnet',
     11155111: 'Sepolia Testnet',
     31337: 'Hardhat Local',
   };
@@ -236,7 +240,7 @@ export class Web3Service {
   }
 
   /**
-   * Intenta cambiar a la red objetivo (Sepolia)
+   * Intenta cambiar a la red objetivo (Base Mainnet)
    */
   async switchToTargetNetwork(): Promise<void> {
     if (!window.ethereum) return;
@@ -251,29 +255,29 @@ export class Web3Service {
       // Si el error es que la red no está configurada en MetaMask
       if (error.code === 4902) {
         try {
-          // Añadimos la red Sepolia a MetaMask
+          // Añadimos la red Base Mainnet a MetaMask
           await window.ethereum.request({
             method: 'wallet_addEthereumChain',
             params: [
               {
                 chainId: `0x${this.targetNetworkId.toString(16)}`,
-                chainName: 'Sepolia Test Network',
+                chainName: 'Base Mainnet',
                 nativeCurrency: {
-                  name: 'SepoliaETH',
+                  name: 'ETH',
                   symbol: 'ETH',
                   decimals: 18
                 },
-                rpcUrls: ['https://rpc.sepolia.org'],
-                blockExplorerUrls: ['https://sepolia.etherscan.io/']
+                rpcUrls: ['https://mainnet.base.org'],
+                blockExplorerUrls: ['https://basescan.org/']
               }
             ],
           });
         } catch (addError) {
-          console.error('Error añadiendo la red Sepolia a MetaMask:', addError);
+          console.error('Error añadiendo la red Base Mainnet a MetaMask:', addError);
           throw addError;
         }
       } else {
-        console.error('Error cambiando a la red Sepolia:', error);
+        console.error('Error cambiando a la red Base Mainnet:', error);
         throw error;
       }
     }
@@ -457,10 +461,10 @@ export class Web3Service {
   }
 
   /**
-   * Obtiene Sepolia ETH para pruebas (redirecciona a un faucet)
+   * Obtiene ETH para pruebas en Base (redirecciona a un faucet)
    */
-  getSepETH(): void {
-    window.open('https://sepoliafaucet.com/', '_blank');
+  getBaseETH(): void {
+    window.open('https://www.coinbase.com/faucets/base-ethereum-faucet', '_blank');
   }
 
   /**
