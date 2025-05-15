@@ -1,0 +1,39 @@
+.deposit-dialog {
+min-width: 320px;
+max-width: 90vw;
+width: 400px;
+.vault-info {
+margin-bottom: 20px;
+padding: 10px;
+background-color: rgba(0, 0, 0, 0.03);
+border-radius: 4px;
+h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+p {
+  margin: 5px 0;
+}
+}
+.deposit-form {
+margin: 20px 0;
+.form-field {
+  width: 100%;
+}
+}
+.error-message {
+color: #f44336;
+margin: 10px 0;
+font-size: 14px;
+}
+mat-dialog-actions {
+button + button {
+margin-left: 8px;
+}
+mat-spinner {
+  display: inline-block;
+  margin-right: 5px;
+}
+}
+}

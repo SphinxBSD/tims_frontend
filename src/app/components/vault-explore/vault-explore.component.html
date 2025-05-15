@@ -1,0 +1,106 @@
+<div class="explore-container">
+      <h1 class="page-title">Explore Public Vaults</h1>
+      
+      <div class="filter-container">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search vaults</mat-label>
+          <input matInput [(ngModel)]="searchTerm" placeholder="Search by name or description">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline">
+          <mat-label>Category</mat-label>
+          <mat-select [(ngModel)]="selectedCategory">
+            <mat-option value="">All Categories</mat-option>
+            <mat-option *ngFor="let category of categories" [value]="category">{{ category }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline">
+          <mat-label>Sort by</mat-label>
+          <mat-select [(ngModel)]="sortBy">
+            <mat-option value="newest">Newest</mat-option>
+            <mat-option value="oldest">Oldest</mat-option>
+            <mat-option value="nameAsc">Name (A-Z)</mat-option>
+            <mat-option value="nameDesc">Name (Z-A)</mat-option>
+            <mat-option value="balanceHighest">Highest Balance</mat-option>
+            <mat-option value="balanceLowest">Lowest Balance</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      
+      <div *ngIf="loading" class="loading-container">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Loading vaults...</p>
+      </div>
+      
+      <div *ngIf="!loading && filteredVaults.length === 0" class="no-vaults">
+        <mat-icon>sentiment_dissatisfied</mat-icon>
+        <p>No public vaults found</p>
+        <button mat-raised-button color="primary" routerLink="/create">Create a Vault</button>
+      </div>
+      
+      <!-- <div class="vaults-grid">
+        <mat-card class="vault-card" *ngFor="let vault of filteredVaults">
+          <mat-card-header>
+            <div mat-card-avatar>
+              <mat-icon color="primary">{{ getVaultIcon(vault.category) }}</mat-icon>
+            </div>
+            <mat-card-title>{{ vault.name }}</mat-card-title>
+            <mat-card-subtitle>{{ vault.category }}</mat-card-subtitle>
+          </mat-card-header>
+          
+          <img *ngIf="vault.imageURI" mat-card-image [src]="vault.imageURI" alt="{{ vault.name }}">
+          <img *ngIf="!vault.imageURI" mat-card-image src="assets/default-vault.png" alt="{{ vault.name }}">
+          
+          <mat-card-content>
+            <p class="vault-description">{{ vault.description }}</p>
+            
+            <div class="vault-details">
+              <div class="detail-item">
+                <span class="label">Balance:</span>
+                <span class="value">{{ vault.balance }} ETH</span>
+              </div>
+              
+              <div *ngIf="vault.targetAmount && vault.targetAmount !== '0'" class="detail-item">
+                <span class="label">Target:</span>
+                <span class="value">{{ vault.targetAmount }} ETH</span>
+                
+                <mat-progress-bar 
+                  mode="determinate" 
+                  [value]="getProgressPercentage(vault.balance, vault.targetAmount)"
+                ></mat-progress-bar>
+                
+                <span class="progress-text">
+                  {{ getProgressPercentage(vault.balance, vault.targetAmount) }}% of goal
+                </span>
+              </div>
+              
+              <div class="detail-item">
+                <span class="label">Created:</span>
+                <span class="value">{{ getFormattedDate(vault.createdAt) }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+          
+          <mat-card-actions>
+            <button mat-button color="primary" [routerLink]="['/vault', vault.address]">
+              <mat-icon>visibility</mat-icon>
+              View Details
+            </button>
+            
+            <button 
+              mat-button 
+              color="accent" 
+              [routerLink]="['/vault', vault.address]" 
+              [state]="{ action: 'deposit' }"
+              *ngIf="isConnected"
+            >
+              <mat-icon>add_circle</mat-icon>
+              Deposit
+            </button>
+          </mat-card-actions>
+          
+        </mat-card>
+      </div> -->
+    </div>

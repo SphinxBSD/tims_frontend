@@ -1,0 +1,112 @@
+<div class="home-container">
+      <div class="hero-section">
+        <h1 class="hero-title">Welcome to Vault DApp</h1>
+        <!-- <img height="200px" src="Tims_A3.png" alt="Tims"> -->
+        <p class="hero-subtitle">Secure, transparent, and decentralized fund management</p>
+        
+        <div class="hero-actions">
+          <button mat-raised-button color="primary" routerLink="/explore">
+            <mat-icon>explore</mat-icon>
+            Explore Vaults
+          </button>
+          
+          <ng-container *ngIf="isConnected; else connectTemplate">
+            <button mat-raised-button color="accent" routerLink="/create">
+              <mat-icon>add_circle</mat-icon>
+              Create Vault
+            </button>
+          </ng-container>
+          
+          <ng-template #connectTemplate>
+            <button mat-raised-button color="accent" (click)="connectWallet()">
+              <mat-icon>account_balance_wallet</mat-icon>
+              Connect Wallet
+            </button>
+          </ng-template>
+        </div>
+      </div>
+
+      <div class="features-section">
+        <h2 class="section-title">Features</h2>
+        
+        <div class="features-grid">
+          <mat-card class="feature-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>security</mat-icon>
+              <mat-card-title>Secure Storage</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>Store your funds securely in Ethereum-based vaults with smart contract protection</p>
+            </mat-card-content>
+          </mat-card>
+          
+          <mat-card class="feature-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>public</mat-icon>
+              <mat-card-title>Public or Private</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>Choose whether your vault is visible to the public or keep it private for your personal use</p>
+            </mat-card-content>
+          </mat-card>
+          
+          <mat-card class="feature-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>account_balance</mat-icon>
+              <mat-card-title>Single Owner Vault</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>Create a vault that only you control, perfect for personal savings or project funding</p>
+            </mat-card-content>
+          </mat-card>
+          
+          <mat-card class="feature-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>attach_money</mat-icon>
+              <mat-card-title>Funding Goals</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>Set target amounts for your vaults and track progress towards your financial goals</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+
+      <div class="how-it-works-section">
+        <h2 class="section-title">How It Works</h2>
+        
+        <div class="steps-container">
+          <div class="step">
+            <div class="step-icon">
+              <mat-icon>account_balance_wallet</mat-icon>
+            </div>
+            <h3>Connect Wallet</h3>
+            <p>Connect your Ethereum wallet to get started with Vault DApp</p>
+          </div>
+          
+          <div class="step">
+            <div class="step-icon">
+              <mat-icon>add_circle</mat-icon>
+            </div>
+            <h3>Create Vault</h3>
+            <p>Create a new vault with your preferred settings and configurations</p>
+          </div>
+          
+          <div class="step">
+            <div class="step-icon">
+              <mat-icon>savings</mat-icon>
+            </div>
+            <h3>Deposit Funds</h3>
+            <p>Add ETH to your vault for safekeeping or to reach your savings goal</p>
+          </div>
+          
+          <div class="step">
+            <div class="step-icon">
+              <mat-icon>trending_up</mat-icon>
+            </div>
+            <h3>Manage & Grow</h3>
+            <p>Monitor your vault, make withdrawals when needed, and watch your funds grow</p>
+          </div>
+        </div>
+      </div>
+    </div>

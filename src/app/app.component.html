@@ -1,0 +1,66 @@
+<div class="app-container">
+  <mat-toolbar color="primary" class="app-toolbar">
+    <span class="app-title" routerLink="/">
+      <img src="Tims_A3_logo.png" alt="Tims Logo" class="logo-image">
+      Tims
+    </span>
+    
+    <div class="nav-links">
+      <a mat-button routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">
+        <mat-icon>home</mat-icon> Home
+      </a>
+      <a mat-button routerLink="/explore" routerLinkActive="active-link">
+        <mat-icon>explore</mat-icon> Explore
+      </a>
+      <a mat-button routerLink="/create" routerLinkActive="active-link">
+        <mat-icon>add_circle</mat-icon> Create
+      </a>
+      <a mat-button routerLink="/my-vaults" routerLinkActive="active-link">
+        <mat-icon>account_balance_wallet</mat-icon> My Vaults
+      </a>
+    </div>
+    
+    <span class="spacer"></span>
+    
+    <ng-container *ngIf="!isConnected; else connectedTemplate">
+      <button mat-raised-button color="accent" (click)="connectWallet()" class="connect-button">
+        <mat-icon>account_balance_wallet</mat-icon>
+        Connect Wallet
+      </button>
+    </ng-container>
+    
+    <ng-template #connectedTemplate>
+      <span class="wallet-address">
+        <mat-icon>verified_user</mat-icon>
+        {{ walletAddress | slice:0:6 }}...{{ walletAddress | slice:-4 }}
+      </span>
+      <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="User menu" class="user-menu-btn">
+        <mat-icon class="user-icon">account_circle</mat-icon>
+      </button>
+      <mat-menu #userMenu="matMenu" class="user-menu">
+        <button mat-menu-item disabled>
+          <mat-icon>fingerprint</mat-icon>
+          <span>{{ walletAddress | slice:0:8 }}...{{ walletAddress | slice:-6 }}</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item routerLink="/my-vaults">
+          <mat-icon>account_balance_wallet</mat-icon>
+          <span>My Vaults</span>
+        </button>
+        <button mat-menu-item routerLink="/create">
+          <mat-icon>add_circle</mat-icon>
+          <span>Create Vault</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="disconnectWallet()">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>Disconnect</span>
+        </button>
+      </mat-menu>
+    </ng-template>
+  </mat-toolbar>
+
+  <div class="content-container">
+    <router-outlet></router-outlet>
+  </div>
+</div>

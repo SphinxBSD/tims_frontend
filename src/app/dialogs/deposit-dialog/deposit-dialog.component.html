@@ -1,0 +1,49 @@
+<div class="deposit-dialog">
+  <h2 mat-dialog-title>Depositar en Vault</h2>
+  <mat-dialog-content>
+    <div class="vault-info">
+      <h3>{{ data.vault.metadata.name }}</h3>
+      <p><strong>Balance actual:</strong> {{ data.vault.balance }} ETH</p>
+    </div>
+<form [formGroup]="depositForm" class="deposit-form">
+  <mat-form-field appearance="outline" class="form-field">
+    <mat-label>Cantidad (ETH)</mat-label>
+    <input 
+      matInput 
+      type="number" 
+      formControlName="amount" 
+      placeholder="Ej. 0.1"
+      min="0.000001"
+      step="0.01"
+    >
+    <mat-error *ngIf="depositForm.get('amount')?.hasError('required')">
+      La cantidad es requerida
+    </mat-error>
+    <mat-error *ngIf="depositForm.get('amount')?.hasError('min')">
+      La cantidad mínima es 0.000001 ETH
+    </mat-error>
+    <mat-error *ngIf="depositForm.get('amount')?.hasError('pattern')">
+      El formato de la cantidad no es válido
+    </mat-error>
+  </mat-form-field>
+</form>
+
+<div class="error-message" *ngIf="(error$ | async) as error">
+  {{ error }}
+</div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()" [disabled]="(isLoading$ | async)">
+      Cancelar
+    </button>
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="deposit()" 
+      [disabled]="depositForm.invalid || (isLoading$ | async)"
+    >
+      <mat-spinner diameter="20" *ngIf="(isLoading$ | async)"></mat-spinner>
+      <span *ngIf="!(isLoading$ | async)">Depositar</span>
+    </button>
+  </mat-dialog-actions>
+</div>

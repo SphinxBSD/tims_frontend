@@ -1,0 +1,241 @@
+// Variables de tema - Paleta de colores moderna
+$primary-color: #1a2980; // Azul profundo
+$primary-gradient: #26d0ce; // Turquesa claro
+$accent-color: #ff9064; // Naranja suave
+$dark-color: #2c3e50; // Azul oscuro
+$light-color: #f5f7fa; // Gris muy claro
+$success-color: #00b894; // Verde menta
+$warning-color: #fdcb6e; // Amarillo suave
+
+// Fuentes
+$font-stack: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+$mono-font: 'JetBrains Mono', 'Courier New', Courier, monospace;
+
+// Mixins
+@mixin box-shadow($level) {
+  @if $level == 1 {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  } @else if $level == 2 {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  } @else if $level == 3 {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  }
+}
+
+@mixin transition($property: all, $duration: 0.25s, $easing: ease-out) {
+  transition: $property $duration $easing;
+}
+
+@mixin glass-effect {
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+// Estilos principales
+.app-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: $light-color;
+  font-family: $font-stack;
+}
+
+.app-toolbar {
+  position: fixed;
+  z-index: 100;
+  @include box-shadow(2);
+  background: linear-gradient(90deg, $primary-color 0%, $primary-gradient 100%);
+  color: white;
+  height: 64px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  .mat-icon-button {
+    @include transition();
+    
+    &:hover {
+      transform: scale(1.1);
+      background-color: rgba(255, 255, 255, 0.15);
+    }
+  }
+  
+  .app-title {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    @include transition();
+    
+    .logo-image {
+      height: 32px;
+      margin-right: 10px;
+    }
+    
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+  
+  .nav-links {
+    display: flex;
+    margin-left: 32px;
+    
+    a {
+      color: rgba(255, 255, 255, 0.85);
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      margin: 0 4px;
+      padding: 0 12px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      position: relative;
+      @include transition();
+      
+      mat-icon {
+        margin-right: 6px;
+        font-size: 18px;
+        height: 18px;
+        width: 18px;
+      }
+      
+      &:hover {
+        color: white;
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      
+      &.active-link {
+        color: white;
+        
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 3px;
+          background-color: $accent-color;
+          border-radius: 3px 3px 0 0;
+        }
+      }
+    }
+  }
+  
+  .wallet-address {
+    display: flex;
+    align-items: center;
+    margin-right: 16px;
+    font-size: 0.9rem;
+    font-family: $mono-font;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 6px 12px;
+    border-radius: 20px;
+    @include transition();
+    
+    mat-icon {
+      font-size: 16px;
+      height: 16px;
+      width: 16px;
+      margin-right: 8px;
+      color: $success-color;
+    }
+    
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+  
+  .connect-button {
+    background-color: $accent-color;
+    color: white;
+    border-radius: 20px;
+    padding: 0 20px;
+    @include transition();
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    
+    mat-icon {
+      margin-right: 6px;
+    }
+    
+    &:hover {
+      @include box-shadow(2);
+      transform: translateY(-2px);
+      background-color: darken($accent-color, 5%);
+    }
+  }
+  
+  .user-menu-btn {
+    margin-left: 4px;
+    
+    .user-icon {
+      font-size: 32px;
+      height: 32px;
+      width: 32px;
+    }
+  }
+}
+
+.content-container {
+  margin-top: 64px;
+  padding: 24px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+// Estilos para el menú de usuario
+::ng-deep .user-menu {
+  .mat-mdc-menu-content {
+    background-color: white;
+    
+    .mat-mdc-menu-item {
+      color: $dark-color;
+      @include transition();
+      font-size: 14px;
+      
+      &:hover {
+        background-color: rgba($primary-color, 0.05);
+        
+        mat-icon {
+          color: $primary-color;
+        }
+      }
+      
+      mat-icon {
+        margin-right: 8px;
+        color: rgba($dark-color, 0.6);
+      }
+      
+      &[disabled] {
+        font-family: $mono-font;
+        opacity: 0.7;
+      }
+    }
+  }
+}
+
+// Media queries para responsive
+@media (max-width: 768px) {
+  .nav-links {
+    display: none !important;
+  }
+  
+  .app-toolbar {
+    padding: 0 16px;
+  }
+  
+  // Aquí podrías agregar un botón de menú hamburguesa para dispositivos móviles
+}
